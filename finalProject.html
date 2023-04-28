@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en-Us">
+    <head>
+        <title>LFC London Store</title>
+        <link rel="stylesheet" href="style.css" />
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width = device-width, initial-scale=1" />
+        <meta name="Description description" description="LFC London Store" content="This is the official store of Liverpool FC in London">
+        <meta name="keywords" content="football, sport, kits">
+    </head>
+
+    <!-- Body -->   
+    <body>
+        <h1>Welcome to Official Liverpool FC store in London.</h1>
+        <!-- Navigation -->
+        <nav id="navigation">
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">Categories</a></li>
+				<li><a href="#">About Us</a></li>
+				<li ><a href="#">Contact Us</a></li>
+			</ul>
+        <!-- Category -->
+        </nav>
+        <section class="categoryItems">
+            <h3><strong>Product categories:</strong></h3>
+            <br>
+            <div class="img">
+                <img src="images/general_kit.jpg" alt="kit" width="800px">
+                <div>Kits</div>
+            </div>
+            <div class="img">
+                <img src="images/general_cap.jpg" alt="caps" width="800px">
+                <div>Caps</div>
+            </div>
+            <div class="img">
+                <img src="images/scarf.jpg" alt="scarves" width="800px">
+                <div>Scarves</div>
+            </div>
+            <div class="img">
+                <img src="images/facemask_general.jpg" alt="facemasks" width="800px">
+                <div>Face Masks</div>
+            </div>
+        </section>
+
+        <br>
+        <section id="selectionSection">
+        <div>
+            <p id="selectCat">Select Category:</p>
+            <select id="category" name="itemCategory" onchange="filterCategory();">
+                <option value="All">All</option>
+                <option value="Kits">Kits</option>
+                <option value="Caps">Caps</option>
+                <option value="Scarves">Scarves</option>
+                <option value="Facemasks">Face masks</option>
+            </select>
+        </div>
+            
+        <select id="currency" name="currency" onchange="currencyChange();"> 
+            <option value="cad">CAD</option>
+            <option value="usd">USD</option>
+            <option value="gbp">GBP</option>
+        </select>
+
+        <div id="timeDisplay"></div>
+        </section>
+
+        <section id="itemDisplay">
+
+        </section>
+
+        <section id="section1">
+
+        <div class="qtyNproduct">
+            <p>
+                Product ID: <input type="text" id="inputID" />  
+            </p>
+            <p>
+                Quantity: <input type="number" id="itemQty" />
+            </p>
+            <p>
+                <input type="button" class="button" value="Item Details" onclick="itemDetails();" />
+                <input type="button" class="button" value="Add to cart" onclick="addToCart();" />
+                <input type="button" class="button" value="Remove from cart" onclick=""/>
+            </p>
+        </div>
+        </section>
+
+        <section class="category">
+			<p class="cartdetails"><strong>Your Cart</strong></p>
+			<p class="cartdetails"><strong>| ID | Price | Quantity | Subtotal |</strong></p>
+			<br/>
+			<div id="cartOutput"></div>
+		</section>
+		<section class="review">
+			<p id="product" class="reviewNproduct"><strong>Product</strong></p>
+			<p class="reviewNproduct">Product ID: <input type="text" id="productID" /></p>
+			<p class="reviewNproduct">Review: <input type="text" id="reviewID" size="20"/></p>
+			<p><input type="button" class="button" id ="submitId" value="Submit Review" onclick="addReview();"/></p>
+			</div>
+		</section>
+		<a class="back">Back to top</a>
+
+        </section>
+
+	<!--Footer-->
+	<footer>
+		<div>
+			<p>
+                Designed by Murad Khalilov.
+			</p>
+		</div>
+	</footer>
+
+    
+	<!--JavaScript-->
+    <script>
+
+        // Constructor
+        function Items(id, name, price, qtyOnHand, maximumPerCustomer, category, costOfShipping, reviews, description, image)
+        {
+            this.id = id;
+	    	this.name = name;
+	     	this.price = price;
+            this.qtyOnHand = qtyOnHand;
+	    	this.maximumPerCustomer = maximumPerCustomer;
+		    this.category = category;
+	    	this.costOfShipping = costOfShipping;
+	    	this.reviews = reviews;
+	     	this.description = description;
+	     	this.image = image;		
+        }
+
+        function ItemsToCart(id, price, qty, shipping)
+        {
+            this.id = id;
+            this.price = price;
+            this.qty = qty;
+            this.shipping = shipping;
+        }
+
+        // Global Arrays
+        var storeItems = [];
+        var cartItems = [];
+
+
+        // Global variables for the default currency(Canadian Dollars)
+        var currencyValue = 1;
+        var currencySign = "CA$";
+
+        function displayAllItems()
+        {   //                          id           name           price qty max  ctg   shpng                       reviews                                                 description                      image
+            storeItems.push(new Items("J001", "Liverpool Home Jersey", 75, 20, 5, "Kits", 15, ["A quality kit with good colour, liked it very much, I recommend it"], "Home jersey for 2021/22 season.", "images/home_jersey.jpg"));
+            storeItems.push(new Items("J002", "Liverpool Home Shorts", 35, 30, 10, "Kits", 10, ["Nice shorts"], "Home shorts for 2021/22 season for men", "images/home_short.jpg"));
+            storeItems.push(new Items("J003", "Liverpool Away Jersey", 65, 25, 7, "Kits", 15, ["Better than last season's away kit, liked it very much."], "Away jersey for 2021/22 season.", "images/away_jersey.jpg"));
+            storeItems.push(new Items("J004", "Liverpool Away Shorts", 30, 35, 12, "Kits", 10, ["Always liked black shorts, this one is just my style!"], "Away short for 2021/22 season.", "images/away_short.jpg"));
+            storeItems.push(new Items("J005", "Liverpool Home Goalkeeper Jersey", 55, 24, 7, "Kits", 12, ["Nice design!"], "Home goalkeeper jersey for 2021/22 season.", "images/home_gk_jersey.jpg"));
+            storeItems.push(new Items("J006", "Liverpool Home Goalkeeper Shorts", 25, 33, 15, "Kits", 8, ["Liked it very much!"], "Home goalkeeper shorts for 2021/22 season.", "images/home_gk_short.jpg"));
+            storeItems.push(new Items("J007", "Liverpool Away Goalkeeper Jersey", 55, 26, 8, "Kits", 10, ["Yellow and black just suit together"], "Away goalkeeper jersey for 2021/22 season.", "images/away_gk_jersey.jpg"));
+            storeItems.push(new Items("J008", "Liverpool Away Goalkeeper Shorts", 23, 34, 15, "Kits", 7, ["Very nice!"], "Away goalkeeper shorts for 2021/22 season.", "images/away_gk_short.jpg"));
+            storeItems.push(new Items("C001", "Red and white cap", 20, 30, 8, "Caps", 7, ["Awesome!"], "Quality red cap designed for only real LFC supporters", "images/red_cap.jpg"));
+            storeItems.push(new Items("C002", "Yellow and red cap", 20, 32, 5, "Caps", 7, ["Nice colours!"], "Yellow and red cap is designed for honouring our 1982 retro away kit.", "images/yellow_cap.jpg"));
+            storeItems.push(new Items("C003", "Red and white racer cap", 15, 29, 5, "Caps", 7, ["High quality!"], "A racer cap is usually for hot weathers.", "images/racer_cap.jpg"));
+            storeItems.push(new Items("S001", "Red and white scarf", 10, 25, 16, "Scarves", 5, ["So good!"], "Classic red and white Liverpool scarf for the supporters.", "images/redandwhite_scarf.jpg"));
+            storeItems.push(new Items("S002", "Jordan Henderson scarf", 12, 26, 12, "Scarves", 5, ["Nice to see a scarf for our skipper!"], "A scarf that shows our glorious captain.", "images/henderson_scarf.jpg"));
+            storeItems.push(new Items("S003", "Jürgen Klopp scarf", 12, 24, 12, "Scarves", 5, ["The gaffer looking sharp!"], "A qualititive scarf for our Boss.", "images/jurgenklopp_scarf.jpg"));
+            storeItems.push(new Items("F001", "Red and white face mask", 5, 50, 18, "Facemasks", 3, ["Nice mask!"], "Red and white mask for keeping you and other supporters safe.", "images/face_mask1.jpg"));
+            storeItems.push(new Items("F002", "Black and golden face mask", 5, 45, 15, "Facemasks", 3, ["Masks in these colours are always worth to buy."], "Our another mask in qualititive design.", "images/face_mask2.jpg"));
+            storeItems.push(new Items("F003", "Dark blue and red face mask", 4, 55, 20, "Facemasks", 3, ["Just a simple design. Love it!"], "Simply designed mask for only the minimalism lovers.", "images/face_mask3.jpg"));
+            
+
+            displayItems(storeItems);
+        }
+
+
+                
+        // Function for displaying current date
+        function displayCurrentDate()
+        {   
+            // Retrieving today's date       
+            var currentDate = new Date();
+            var date = currentDate.getDate() +  "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear();
+	     	var time = currentDate.getHours() + ":" + currentDate.getMinutes();
+
+            // Outputting date and time together
+            document.getElementById("timeDisplay").innerHTML = date + " " + time;
+        }
+        displayCurrentDate();
+
+        
+        // Function for displaying items
+        function displayItems(item)
+        {
+            var theDiv = document.getElementById("itemDisplay");
+            theDiv.classList = "itemsdiv";
+            
+            // Clearing output
+            theDiv.innerHTML = "";
+            for (var i = 0; i < item.length; i++)
+            {
+                var tempDiv = document.createElement("div");
+                var detailsDiv = document.createElement("div");
+                detailsDiv.classList = ("detailsdiv");
+                tempDiv.classList = ("tempdivcls")
+                
+                // Image
+                var productImg = document.createElement("img");
+                productImg.src = item[i].image;
+                productImg.classList = "imagesdiv";
+                tempDiv.appendChild(productImg);
+                
+                // ID
+                var productId = document.createElement("p");
+                productId.innerHTML = "Product ID: " + item[i].id;
+                detailsDiv.appendChild(productId);
+                
+                // Name
+                var productName = document.createElement("p");
+                productName.innerHTML = item[i].name;
+                detailsDiv.appendChild(productName);
+                
+                // Price
+                var productPrice = document.createElement("p");
+                productPrice.innerHTML = "Price:" + " " + Math.floor((item[i].price * currencyValue))+ " " + currencySign;
+                detailsDiv.appendChild(productPrice);
+                
+                // Quantity on hand
+                var productQty = document.createElement("p");
+                productQty.innerHTML = "Avaliable: " + item[i].qtyOnHand + " pcs";
+                detailsDiv.appendChild(productQty);
+
+                // Maximum Per Customer
+                var productMaxPerCust = document.createElement("p");
+                productMaxPerCust.innerHTML = "Maximum Per Customer: " + item[i].maximumPerCustomer + " pcs";
+                detailsDiv.appendChild(productMaxPerCust);
+                
+                // Appending all of them to the Div
+                tempDiv.appendChild(detailsDiv);
+                theDiv.appendChild(tempDiv);
+            }
+        }
+
+        displayAllItems();
+
+        displayItemsOnCart();
+
+        // Function for displaying cart items
+        function displayItemsOnCart()
+        {
+            // Default variables before calculation
+            var subtotalItem = 0;
+            var subtotal = 0;
+            var total= 0;
+            var shipping = 0;
+            var tax = 0;
+            
+            // Turning them into numbers
+            subtotalItem = parseInt(subtotalItem);
+            subtotal = parseInt(subtotal);
+            total = parseInt(total);
+            shipping = parseInt(shipping);
+            tax = parseInt(tax);
+
+            outputCart = document.getElementById("cartOutput");
+            outputCart.innerHTML = ""; 
+            outputCart.innerHTML = "No items in cart, add items to cart."
+            
+            // Loop for adding cart items
+            for(i = 0; i < cartItems.length; i++)
+            {
+                outputCart.innerHTML = ""; 
+                var item = cartItems[i];
+  
+                subtotalItem += item.price * item.qty;
+                shipping += item.shipping;
+                outputCart.innerHTML += item.id + " | " + currencySign + (item.price * currencyValue).toFixed(2) + " | " + item.qty + " | " + currencySign + (item.price * item.qty).toFixed(2) + "</br>";
+                
+            } 
+            
+            subtotal = (subtotalItem + shipping) * currencyValue;
+            tax = subtotal * 0.13;
+            total = subtotal + tax;
+            
+            // Outputting all details
+            outputCart.innerHTML +=
+            "</br>" + "<hr>" + "</br>" + "</br>" + 
+            "Items Subtotal: " + currencySign + (currencyValue * subtotal).toFixed(2) + "</br>" + 
+            "Estimated Shipping: " + currencySign + (currencyValue * shipping).toFixed(2) + "</br>" + "</br>" +
+            "Subtotal: " + currencySign + subtotal.toFixed(2) + "</br>" + 
+            "Estimated Tax: " + currencySign + tax.toFixed(2) + "</br>" + 
+            "Order Total: " + currencySign + total.toFixed(2) + "</br>"
+            
+        }
+        
+        // Function for adding to cart
+        function addToCart()
+        {
+            // Retrieving ID and quantity
+            var idOfItem = document.getElementById("inputID").value;
+            var qtyOfItem = document.getElementById("itemQty").value;
+            qtyOfItem = parseInt(qtyOfItem);
+            
+            
+        
+            for (var i = 0; i < storeItems.length; i++)
+            {
+                if(storeItems[i].id == idOfItem)
+                {
+                    cartItems.push(new ItemsToCart(storeItems[i].id, storeItems[i].price, qtyOfItem, storeItems[i].costOfShipping));
+                }
+                else if(qtyOfItem < 1)
+                {
+                    alert("Quantity is not provided.");
+                    break;
+                }
+                else if(idOfItem == 0)
+                {
+                    alert("Please provide a valid ID.")
+                    break;
+                } 
+            }
+
+            for (var m = 0; m < storeItems.length; m++)
+            {
+                if(qtyOfItem > storeItems[m].maximumPerCustomer)
+                {
+                    alert("The amount for maximum per customer of this product is " + storeItems[m].maximumPerCustomer + " pcs.");
+                    break;
+                }
+            }
+        
+           displayItemsOnCart();
+
+        }
+        
+        // Function for currency change
+        function currencyChange()
+        {
+            var selectedCurrency = document.getElementById("currency").value;
+            var cad = 1;
+            var usd = 0.78;
+            var gbp = 0.59;
+            
+            // Selecting currency and outputting its sign and value
+            if(selectedCurrency == "cad")
+            {
+                currencyValue = cad;
+                currencySign = "CA$";
+            }
+            else if (selectedCurrency == "usd")
+            {
+                currencyValue = cad * usd;
+                currencySign = "US$";
+            }
+            else if (selectedCurrency == "gbp")
+            {
+                currencyValue = cad * gbp;
+                currencySign = "£";
+            }
+
+            displayItems(storeItems);
+            filterCategory();
+        }
+        
+        // Function for filtering category
+        function filterCategory()
+        {   
+            // Retrieving selected category
+            var selectedCategory = document.getElementById("category").value;
+
+            if(selectedCategory == "All")
+            {
+                displayItems(storeItems);
+                return;
+            } 
+
+            // Array for storing matched items
+            var filteredItems = [];
+            
+            // Looping for matched items
+            for (var i = 0; i < storeItems.length; i++)
+            {
+                if (storeItems[i].category == selectedCategory)
+                {
+                    // Storing items in the array
+                    filteredItems.push(storeItems[i]);
+                }
+            }
+
+            // Displaying matched items
+            displayItems(filteredItems);
+        }
+        
+        // Function for item details
+        function itemDetails()
+        {
+            // Retrieving ID 
+            var productID = document.getElementById("inputID").value;
+        
+            for (i = 0; i < storeItems.length; i++)
+            {   
+                // Matching the IDs
+                if(storeItems[i].id === productID)
+                {
+                    // Outputting the details of the selected item
+                    alert("Product ID: " + storeItems[i].id + 
+                    "\nProduct name: " + storeItems[i].name +
+                    "\nPrice: $" + storeItems[i].price + 
+                    "\nAvaliable: " + storeItems[i].qtyOnHand + 
+                    "\nMaximum Per Customer: " + storeItems[i].maximumPerCustomer + 
+                    "\nCost of Shipping: $" + storeItems[i].costOfShipping + 
+                    "\n\nDescription: \n" + storeItems[i].description + 
+                    "\n\nReviews: \n" + "- " + storeItems[i].reviews);
+                }
+            }
+
+        }
+        
+        // Function for adding review
+        function addReview()
+        {
+            // Retrieving ID and review of the item
+            var productIdReview = document.getElementById("productID").value;
+            var addedReview = document.getElementById("reviewID").value;
+            for (var i = 0; i < storeItems.length; i++)
+            {   
+                // If ID exists then alerting the user for success of the adding proccess
+                if (storeItems[i].id == productIdReview)
+                {
+                    // Storing them to the items review
+                    storeItems[i].reviews.push("\n" + "- " + addedReview);
+                    alert("Your review has been added!");
+                }
+                else if (productIdReview == 0 || addedReview == 0)
+                {    
+                    // If id or review not provided, warning user to provide them
+                    alert("Please provide valid ID and review.")
+                    break;
+                }
+            }
+            
+        }
+
+
+
+    </script>
+    </body>
+</html>
